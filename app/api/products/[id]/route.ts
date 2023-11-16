@@ -31,11 +31,11 @@ export async function PATCH(request: Request, { params }: any) {
         price: body.price,
         description: body.description,
         isFeatured: body.isFeatured,
+        images: body.images,
       },
     });
     return NextResponse.json(products);
   } catch (error: any) {
-    console.log(error);
     return [];
   }
 }

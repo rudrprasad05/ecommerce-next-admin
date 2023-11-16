@@ -1,6 +1,6 @@
 import Button from "@/components/Button";
 import React from "react";
-import { HiXMark } from "react-icons/hi2";
+import { MdDeleteOutline } from "react-icons/md";
 
 interface props {
   onClick?: () => void;
@@ -9,12 +9,8 @@ interface props {
 
 const XButton: React.FC<props> = ({ onClick }) => {
   return (
-    <button
-      type="button"
-      className="bg-rose-400 text-white hover:bg-rose-500 w-8 h-8 flex items-center justify-center"
-      onClick={onClick}
-    >
-      <HiXMark />
+    <button type="button" className="stroke text-rose-500" onClick={onClick}>
+      <MdDeleteOutline size={25} />
     </button>
   );
 };

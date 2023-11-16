@@ -8,6 +8,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import ProductCard from "./components/ProductCard";
+import { HiMiniPlus } from "react-icons/hi2";
+import TooltipMain from "@/components/Tooltip";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const index = () => {
   const [productsList, setproductsList] = useState([]);
@@ -38,15 +41,26 @@ const index = () => {
       <Head>
         <title>Products</title>
       </Head>
-      <Link href={"/admin/products/new"}>
-        <Button>New</Button>
-      </Link>
+      <div className="absolute bottom-10 right-10">
+        <TooltipMain hint={"Add New Product"}>
+          <Link href={"/admin/products/new"}>
+            <div className=" text-white border bg-green-500 shadow-sm rounded-md p-2">
+              <HiMiniPlus size={30} />
+            </div>
+          </Link>
+        </TooltipMain>
+      </div>
 
       <main>
-        {productsList &&
-          productsList?.map((product, index) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="grid grid-cols-2 gap-3">
+          {!isLoading
+            ? productsList?.map((product, index) => (
+                <ProductCard key={index} product={product} />
+              ))
+            : [1, 2, 3, 4].map((item, index) => (
+                <Skeleton key={index} className="w-full h-12 rounded-md" />
+              ))}
+        </div>
       </main>
     </div>
   );

@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/Nav";
-import ToasterContext from "./context/ToasterContext";
+
 import AuthContext from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const inter = Inter({ subsets: ["latin"] });
 

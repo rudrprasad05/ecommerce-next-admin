@@ -6,6 +6,9 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, price, description, isFeatured, images } = body;
 
+    if (name == "" || price == "" || description == "")
+      return new NextResponse("Missing Fields", { status: 500 });
+
     const product = await prisma.product.create({
       data: {
         name,
@@ -24,7 +27,6 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request, params: any) {
-  console.log(params.id);
   try {
     const products = await prisma.product.findMany({
       orderBy: {

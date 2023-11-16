@@ -16,6 +16,8 @@ import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import EditProfileSheet from "./EditProfileSheet";
+import AvatarComponent from "./AvatarComponent";
 
 interface props {
   children: React.ReactNode;
@@ -24,7 +26,7 @@ interface props {
 const Nav: React.FC<props> = ({ children }) => {
   const [domLoaded, setDomLoaded] = useState(false);
   const session = useSession();
-  const inactiveLink = "flex gap-5 items-center rounded-lg shadow-md";
+  const inactiveLink = "flex gap-5 items-center rounded-lg ";
   const activeLink = inactiveLink + "bg-white text-blue-500";
   const pathname = usePathname();
 
@@ -86,15 +88,13 @@ const Nav: React.FC<props> = ({ children }) => {
               </div>
             </Link>
 
-            <div className="mt-auto flex items-center justify-between">
-              <button className="rounded-full overflow-clip w-8 relative my-auto">
-                <img
-                  src={user?.image || "/avatar.jpg"}
-                  alt="profile picture"
-                  className="w-full object-cover"
-                />
-              </button>
+            <div className="mt-auto">
+              <EditProfileSheet>
+                <AvatarComponent fallback={"AD"} src={user?.image} />
+              </EditProfileSheet>
+            </div>
 
+            {/* <div className="mt-auto flex items-center justify-between">
               <button
                 className=""
                 onClick={() => {
@@ -104,7 +104,7 @@ const Nav: React.FC<props> = ({ children }) => {
               >
                 <HiOutlineArrowRightOnRectangle size={30} />
               </button>
-            </div>
+            </div> */}
           </nav>
 
           <main className="grow px-5">{children}</main>
