@@ -38,11 +38,11 @@ const Button: React.FC<ButtonProps> = ({
             py-1
             
         `,
-        disabled && "opacity-50 cursor-default",
+        disabled && "opacity-50 cursor-wait",
         fullWidth && "w-full",
         secondary ? "text-gray-900" : "text-white",
         danger && "bg-rose-500 hover:bg-rose-600",
-        sticky && "absolute bottom-10",
+
         !secondary && !danger && "bg-blue-500 hover:bg-blue-600"
       )}
     >

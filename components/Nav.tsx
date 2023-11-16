@@ -1,91 +1,117 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { HiBuildingStorefront, 
-    HiOutlineHomeModern, 
-    HiOutlineIdentification, 
-    HiOutlineCurrencyDollar,
-    HiOutlineCircleStack,
-    HiListBullet,
-    HiOutlineCog8Tooth,
-    HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import React, { useEffect, useState } from "react";
+import {
+  HiBuildingStorefront,
+  HiOutlineHomeModern,
+  HiOutlineIdentification,
+  HiOutlineCurrencyDollar,
+  HiOutlineCircleStack,
+  HiListBullet,
+  HiOutlineCog8Tooth,
+  HiOutlineArrowRightOnRectangle,
+} from "react-icons/hi2";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+import toast from "react-hot-toast";
 
-interface props{
-    children: React.ReactNode
+interface props {
+  children: React.ReactNode;
 }
 
-const Nav : React.FC<props> = ({ children }) => {
+const Nav: React.FC<props> = ({ children }) => {
+  const [domLoaded, setDomLoaded] = useState(false);
+  const session = useSession();
+  const inactiveLink = "flex gap-5 items-center rounded-lg shadow-md";
+  const activeLink = inactiveLink + "bg-white text-blue-500";
+  const pathname = usePathname();
 
+  const user = session.data?.user;
 
-    const inactiveLink = "flex gap-5 items-center rounded-lg shadow-md"
-    const activeLink = inactiveLink + "bg-white text-blue-500"
-    const pathname = usePathname()
+  useEffect(() => {
+    setDomLoaded(true);
+  }, [domLoaded]);
 
-    return (
-        <div className='flex'>
-            <nav className='px-8 py-5 flex flex-col gap-5 capitalize sticky top-0 h-screen'>
-                <Link href={"/"}>
-                    <div className={inactiveLink}>
-                        <HiBuildingStorefront size={30}/>
-                        <span>Ecommerce</span>
-                    </div>
-                </Link>
+  return (
+    <>
+      {domLoaded && (
+        <div className="flex">
+          <nav className="px-8 py-5 flex flex-col gap-5 capitalize sticky top-0 h-screen">
+            <Link href={"/"}>
+              <div className={inactiveLink}>
+                <HiBuildingStorefront size={30} />
+                <span>Ecommerce</span>
+              </div>
+            </Link>
 
-                <Link href={"/"}>
-                    <div className={pathname === '/' ? activeLink : inactiveLink}>
-                        <HiOutlineIdentification size={30}/>
-                        <span>Dashboard</span>
-                    </div>
-                </Link>
+            <Link href={"/admin"}>
+              <div className={pathname === "/" ? activeLink : inactiveLink}>
+                <HiOutlineIdentification size={30} />
+                <span>Dashboard</span>
+              </div>
+            </Link>
 
-                <Link href={"/orders"}>
-                    <div className={pathname.includes('/orders') ? activeLink : inactiveLink}>
-                        <HiOutlineCurrencyDollar size={30}/>
-                        <span>Orders</span>
-                    </div>
-                </Link>
+            <Link href={"/admin/orders"}>
+              <div
+                className={
+                  pathname.includes("/orders") ? activeLink : inactiveLink
+                }
+              >
+                <HiOutlineCurrencyDollar size={30} />
+                <span>Orders</span>
+              </div>
+            </Link>
 
-                <Link href={"/products"}>
-                    <div className={pathname.includes('/products') ? activeLink : inactiveLink }>
-                        <HiOutlineCircleStack size={30}/>
-                        <span>Products</span>
-                    </div>
-                </Link>
+            <Link href={"/admin/products"}>
+              <div
+                className={
+                  pathname.includes("/products") ? activeLink : inactiveLink
+                }
+              >
+                <HiOutlineCircleStack size={30} />
+                <span>Products</span>
+              </div>
+            </Link>
 
-                <Link href={"/categories"}>
-                    <div className={pathname.includes('/categories') ? activeLink : inactiveLink }>
-                        <HiListBullet size={30}/>
-                        <span>categories</span>
-                    </div>
-                </Link>
+            <Link href={"/admin/categories"}>
+              <div
+                className={
+                  pathname.includes("/categories") ? activeLink : inactiveLink
+                }
+              >
+                <HiListBullet size={30} />
+                <span>categories</span>
+              </div>
+            </Link>
 
-                
-                <div className='mt-auto flex items-center justify-between'>
+            <div className="mt-auto flex items-center justify-between">
+              <button className="rounded-full overflow-clip w-8 relative my-auto">
+                <img
+                  src={user?.image || "/avatar.jpg"}
+                  alt="profile picture"
+                  className="w-full object-cover"
+                />
+              </button>
 
-                    <button className="rounded-full overflow-clip w-8 relative my-auto">
-                        <img alt="" className="w-full object-cover"/>
-                    </button>
+              <button
+                className=""
+                onClick={() => {
+                  toast.success("Successfully Logged Out");
+                  signOut();
+                }}
+              >
+                <HiOutlineArrowRightOnRectangle size={30} />
+              </button>
+            </div>
+          </nav>
 
-
-                    <button className="">
-                        <HiOutlineArrowRightOnRectangle size={30}/>
-                    </button>
-
-
-
-            
-                </div>
-            </nav>
-
-            <main className='grow bg-white text-black'>
-                {children}
-            </main>
-        
+          <main className="grow px-5">{children}</main>
         </div>
-       
-    )
-}
+      )}
+    </>
+  );
+};
 
-export default Nav
+export default Nav;

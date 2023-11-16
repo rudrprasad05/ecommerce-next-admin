@@ -2,19 +2,29 @@
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import AuthSocialButton from "./AuthSocialButton";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
+  const session = useSession();
+  const router = useRouter();
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (session?.status == "authenticated") {
+      console.log("authenticated");
+      router.push("/admin");
+    }
+  }, [session?.status, router]);
 
   const toggleVariant = useCallback(() => {
     if (variant == "LOGIN") setVariant("REGISTER");
@@ -39,6 +49,7 @@ const AuthForm = () => {
     if (variant == "REGISTER") {
       axios
         .post("/api/register", data)
+        .then(() => signIn("credentials", data))
         .catch(() => {
           toast.error("Something went wrong");
         })
@@ -54,6 +65,7 @@ const AuthForm = () => {
             toast.error("Invalid Credentials");
           } else if (callback?.ok) {
             toast.success("Signed In Successfully");
+            router.push("/admin");
           }
         })
         .finally(() => {
@@ -81,8 +93,14 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="w-full mx-auto shadow-md rounded-lg bg-white">
-      <div className="px-8 py-5">
+    <div className="w-screen h-screen  shadow-md grid items-center">
+      <div className="px-8 py-5 rounded-lg bg-slate-700 w-2/3 mx-auto my-auto">
+        {variant == "LOGIN" && (
+          <div className="text-xl text-center">Sign into Your Account</div>
+        )}
+        {variant == "REGISTER" && (
+          <div className="text-xl text-center">Create New Account</div>
+        )}
         <form action="" onSubmit={handleSubmit(onSubmit)}>
           {variant === "REGISTER" && (
             <Input
@@ -122,7 +140,7 @@ const AuthForm = () => {
               <div className="w-full border-t border-gray-500" />
             </div>
             <div className="relative flex justify-center">
-              <span className="px-2 bg-white text-sm text-gray-500">
+              <span className="px-2 text-sm bg-secondary-bg">
                 Or Continue With
               </span>
             </div>
@@ -140,7 +158,7 @@ const AuthForm = () => {
           />
         </div>
 
-        <div className="flex gap-2 text-gray-500 justify-center text-sm mt-6 px-2">
+        <div className="flex gap-2 justify-center text-sm mt-6 px-2">
           <div>
             {variant === "LOGIN"
               ? "New to Messenger?"

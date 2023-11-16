@@ -23,7 +23,7 @@ const Select: React.FC<props> = ({
       <label htmlFor="" className="text-sm">
         {label}
       </label>
-      <div className="mt-2">
+      <div className="mt-2 bg-background">
         <ReactSelect
           isDisabled={disabled}
           value={value}
@@ -35,6 +35,7 @@ const Select: React.FC<props> = ({
             menuPortal: (base) => ({
               ...base,
               zIndex: 9999,
+              background: "black",
             }),
           }}
           classNames={{
